@@ -18,26 +18,34 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-h1 {
-  margin: 0;
-  font-weight: 700;
-  color: var(--accent-2);
-  font-size: clamp(24px, 6vw, 40px);
-  text-align: center;
-}
-
+/* ======= INDEX ======= */
 .page {
   min-height: 100dvh;
   display: grid;
   align-content: center;
   gap: 20px;
   padding: 0 var(--space);
+  background-image: url('fundo_index.jpg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  text-align: center;
+}
+
+/* para garantir legibilidade no texto */
+.page h1 {
+  background: rgba(255, 255, 255, 0.6);
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: var(--accent-2);
 }
 
 .botoes {
   display: flex;
   justify-content: center;
   gap: 16px;
+  margin-top: 12px;
 }
 
 /* botões idênticos */
@@ -78,7 +86,7 @@ h1 {
   z-index: 9999;
 }
 
-/* --- PÁGINA SIM --- */
+/* ======= PÁGINA SIM ======= */
 .sim-page {
   background-image:
     linear-gradient(rgba(255,80,80,.35), rgba(160,0,0,.55)),
