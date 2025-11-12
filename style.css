@@ -4,6 +4,8 @@
   --accent: #cc1414;
   --accent-2: #7a0000;
   --space: clamp(16px, 4vw, 28px);
+  --btn-w: 140px;
+  --btn-h: 48px;
 }
 
 html, body {
@@ -38,60 +40,55 @@ h1 {
   gap: 16px;
 }
 
-.btn,
-#nao {
+/* botões idênticos */
+.btn {
+  width: var(--btn-w);
+  height: var(--btn-h);
   background: #fff;
   color: var(--accent-2);
   border: 2px solid var(--accent);
-  padding: 12px 20px;
-  font-size: clamp(16px, 4.2vw, 18px);
   border-radius: 8px;
-  min-width: 120px;
-  min-height: 48px;
-  box-shadow: 0 2px 0 rgba(0,0,0,0.06);
-  transition: transform 0.05s linear, background 0.2s;
-  text-align: center;
+  font-size: clamp(16px, 4.2vw, 18px);
   font-weight: 500;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.06);
+  transition: transform .05s linear, background .2s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   box-sizing: border-box;
 }
+.btn:hover { transform: translateY(-1px); background: #ffd7d7; }
+#sim { text-decoration: none; }
 
-.btn:hover,
-#nao:hover {
-  transform: translateY(-1px);
-  background: #ffd7d7;
-}
-
-#sim {
-  text-decoration: none;
-}
-
+/* espaçador invisível do NÃO para manter layout */
 .ghost-nao {
+  width: var(--btn-w);
+  height: var(--btn-h);
+  display: inline-block;
   visibility: hidden;
   pointer-events: none;
 }
 
+/* botão NÃO real, fora do fluxo */
 #nao {
   position: fixed;
+  left: -9999px;
+  top: -9999px;
   z-index: 9999;
-  left: 0;
-  top: 0;
 }
 
+/* --- PÁGINA SIM --- */
 .sim-page {
-  background-image: linear-gradient(
-      rgba(255, 80, 80, 0.35),
-      rgba(160, 0, 0, 0.55)
-    ),
+  background-image:
+    linear-gradient(rgba(255,80,80,.35), rgba(160,0,0,.55)),
     url('perfil.jpeg');
-  background-position: center center;
-  background-size: cover;
+  background-position: center center; /* centraliza o rosto */
+  background-size: cover;             /* preenche a tela */
   background-repeat: no-repeat;
   font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: #fff;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  text-shadow: 2px 2px 6px rgba(0,0,0,.6);
   overflow: hidden;
   min-height: 100dvh;
   padding: calc(env(safe-area-inset-top) + var(--space)) var(--space)
@@ -120,13 +117,13 @@ h1 {
   margin: 0;
   color: #fff;
 }
-
 .sim-page p {
   font-size: clamp(16px, 4.6vw, 22px);
   margin: 0;
   color: #fff;
 }
 
+/* corações */
 .heart {
   position: fixed;
   bottom: -10px;
@@ -136,18 +133,12 @@ h1 {
   opacity: 0.8;
   pointer-events: none;
 }
-
 @keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translateY(-110vh) scale(1.8);
-    opacity: 0;
-  }
+  0% { transform: translateY(0) scale(1); opacity: 0.9; }
+  100% { transform: translateY(-110vh) scale(1.8); opacity: 0; }
 }
 
+/* fogos */
 .firework {
   position: fixed;
   width: 6px;
@@ -158,29 +149,20 @@ h1 {
   animation: explode 1s ease-out forwards;
   pointer-events: none;
 }
-
 @keyframes explode {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(25);
-    opacity: 0;
-  }
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(25); opacity: 0; }
 }
 
-audio {
-  display: none;
-}
-
+/* player escondido + botão play fixo */
+audio { display: none; }
 #playMusic {
   position: fixed;
   right: 24px;
   bottom: 24px;
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.6);
   padding: 10px 20px;
   border-radius: 50px;
   cursor: pointer;
@@ -188,12 +170,8 @@ audio {
   font-weight: 500;
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: all .25s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   z-index: 10;
 }
-
-#playMusic:hover {
-  background: rgba(255, 255, 255, 0.45);
-  transform: translateY(-3px) scale(1.03);
-}
+#playMusic:hover { background: rgba(255,255,255,0.45); transform: translateY(-3px) scale(1.03); }
