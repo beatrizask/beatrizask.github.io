@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quer namorar comigo?</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <h1>Quer namorar comigo?</h1>
+
+    <div class="botoes" id="box">
+      <a id="sim-link" href="sim.html"><button id="sim" type="button">Sim</button></a>
+      <button id="nao" type="button">Não</button>
+    </div>
+  </div>
+
+  <!-- JS fica aqui no index, como você quer -->
+  <script>
+  (function () {
+    const sim = document.getElementById('sim');
+    const nao = document.getElementById('nao');
+
+    const GAP = 16;               // espaço entre "Sim" e "Não" ao alinhar
+    const TRIGGER_DISTANCE = 70;  // dá pra chegar bem perto
+    const PAD = 4;                // margem das bordas
+    let lastMoveAt = 0;
+
+    // Coloca o "Não" AO LADO do "Sim" (alinhado visualmente)
+    function alignNaoNextToSim() {
+      const sr = sim.getBoundingClientRect();
+      const nr = nao.getBoundingClientRect();
+      let left = sr.right + GAP;
+      let top  = sr.top;
+
+      // Garante ficar 100% visível
+      const maxLeft = window.innerWidth  - nr.width  - PAD;
+      const maxTop  = window.innerHeight - nr.height - PAD;
+      left = Math.max(PAD, Math.min(maxLeft, left));
+      top  = Math.max(PAD, Math.min(maxTop,  top));
+
+      nao.style.left = left + 'px';
+      nao.style.top  = top  + 'px';
+      nao.style.transform = 'none';
+    }
+
+    // Move o "Não" para uma posição aleatória visível
+    function moveNaoRandom(avoidPoint) {
+      const nr = nao.getBoundingClientRect();
+      for (let i = 0; i < 30; i++) {
+        const left = Math.random() * (window.innerWidth  - nr.width  - PAD*2) + PAD;
+        const top  = Math.random() * (window.innerHeight - nr.height - PAD*2) + PAD;
+
+        if (avoidPoint) {
+          const cx = left + nr.width / 2;
+          const cy = top  + nr.height / 2;
+          if (Math.hypot(cx - avoidPoint.x, cy - avoidPoint.y) < TRIGGER_DISTANCE * 1.25) continue;
+        }
+        if (Math.hypot(left - (nao.offsetLeft||0), top - (nao.offsetTop||0)) < 30) continue;
+
+        nao.style.left = left + 'px';
+        nao.style.top  = top  + 'px';
+        return;
+      }
+      // fallback: pequeno salto
+      nao.style.left = Math.max(PAD, Math.min(window.innerWidth  - nr.width  - PAD, (nao.offsetLeft||0) + 50)) + 'px';
+      nao.style.top  = Math.max(PAD, Math.min(window.innerHeight - nr.height - PAD, (nao.offsetTop ||0) + 30)) + 'px';
+    }
+
+    function maybeEvade(mouseX, mouseY) {
+      const now = performance.now();
+      if (now - lastMoveAt < 70) return; // debounce leve
+      const r = nao.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = r.top  + r.height / 2;
+      if (Math.hypot(mouseX - cx, mouseY - cy) < TRIGGER_DISTANCE) {
+        lastMoveAt = now;
+        moveNaoRandom({ x: mouseX, y: mouseY });
+      }
+    }
+
+
+    window.addEventListener('mousemove', (e) => maybeEvade(e.clientX, e.clientY));
+    nao.addEventListener('mouseenter', (e) => moveNaoRandom({ x: e.clientX, y: e.clientY }));
+    nao.addEventListener('click', (e) => { e.preventDefault(); moveNaoRandom({ x: e.clientX, y: e.clientY }); });
+
+
+    window.addEventListener('load', alignNaoNextToSim);
+    window.addEventListener('resize', alignNaoNextToSim);
+  })();
+  </script>
+</body>
+</html>
