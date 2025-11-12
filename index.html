@@ -9,85 +9,73 @@
 <body>
   <div class="page">
     <h1>Quer namorar comigo?</h1>
-
-    <div class="botoes" id="box">
-      <a id="sim-link" href="sim.html"><button id="sim" type="button">Sim</button></a>
-      <button id="nao" type="button">Não</button>
+    <div class="botoes">
+      <a id="sim" class="btn" href="sim.html">Sim</a>
+      <span class="ghost-nao btn">Não</span>
     </div>
   </div>
 
-  <!-- JS fica aqui no index, como você quer -->
+  <button id="nao" class="btn" type="button">Não</button>
+  <audio id="errou" preload="auto" src="errou.mp3"></audio>
+
   <script>
   (function () {
-    const sim = document.getElementById('sim');
     const nao = document.getElementById('nao');
-
-    const GAP = 16;               // espaço entre "Sim" e "Não" ao alinhar
-    const TRIGGER_DISTANCE = 70;  // dá pra chegar bem perto
-    const PAD = 4;                // margem das bordas
+    const ghost = document.querySelector('.ghost-nao');
+    const errou = document.getElementById('errou');
+    const PAD = 8;
+    const TRIGGER_DISTANCE = 70;
     let lastMoveAt = 0;
 
-    // Coloca o "Não" AO LADO do "Sim" (alinhado visualmente)
-    function alignNaoNextToSim() {
-      const sr = sim.getBoundingClientRect();
-      const nr = nao.getBoundingClientRect();
-      let left = sr.right + GAP;
-      let top  = sr.top;
-
-      // Garante ficar 100% visível
-      const maxLeft = window.innerWidth  - nr.width  - PAD;
-      const maxTop  = window.innerHeight - nr.height - PAD;
-      left = Math.max(PAD, Math.min(maxLeft, left));
-      top  = Math.max(PAD, Math.min(maxTop,  top));
-
-      nao.style.left = left + 'px';
-      nao.style.top  = top  + 'px';
-      nao.style.transform = 'none';
+    function placeNaoOverGhost() {
+      const r = ghost.getBoundingClientRect();
+      nao.style.left = r.left + 'px';
+      nao.style.top = r.top + 'px';
     }
 
-    // Move o "Não" para uma posição aleatória visível
+    function playErrou() {
+      try { errou.currentTime = 0; errou.play(); } catch (_) {}
+    }
+
     function moveNaoRandom(avoidPoint) {
       const nr = nao.getBoundingClientRect();
       for (let i = 0; i < 30; i++) {
         const left = Math.random() * (window.innerWidth  - nr.width  - PAD*2) + PAD;
         const top  = Math.random() * (window.innerHeight - nr.height - PAD*2) + PAD;
-
         if (avoidPoint) {
           const cx = left + nr.width / 2;
           const cy = top  + nr.height / 2;
           if (Math.hypot(cx - avoidPoint.x, cy - avoidPoint.y) < TRIGGER_DISTANCE * 1.25) continue;
         }
-        if (Math.hypot(left - (nao.offsetLeft||0), top - (nao.offsetTop||0)) < 30) continue;
-
         nao.style.left = left + 'px';
         nao.style.top  = top  + 'px';
         return;
       }
-      // fallback: pequeno salto
       nao.style.left = Math.max(PAD, Math.min(window.innerWidth  - nr.width  - PAD, (nao.offsetLeft||0) + 50)) + 'px';
       nao.style.top  = Math.max(PAD, Math.min(window.innerHeight - nr.height - PAD, (nao.offsetTop ||0) + 30)) + 'px';
     }
 
-    function maybeEvade(mouseX, mouseY) {
+    function maybeEvade(x, y) {
       const now = performance.now();
-      if (now - lastMoveAt < 70) return; // debounce leve
+      if (now - lastMoveAt < 70) return;
       const r = nao.getBoundingClientRect();
       const cx = r.left + r.width / 2;
       const cy = r.top  + r.height / 2;
-      if (Math.hypot(mouseX - cx, mouseY - cy) < TRIGGER_DISTANCE) {
+      if (Math.hypot(x - cx, y - cy) < TRIGGER_DISTANCE) {
         lastMoveAt = now;
-        moveNaoRandom({ x: mouseX, y: mouseY });
+        playErrou();
+        moveNaoRandom({ x, y });
       }
     }
 
+    window.addEventListener('load', placeNaoOverGhost);
+    window.addEventListener('resize', placeNaoOverGhost);
+    window.addEventListener('orientationchange', placeNaoOverGhost);
 
-    window.addEventListener('mousemove', (e) => maybeEvade(e.clientX, e.clientY));
-    nao.addEventListener('mouseenter', (e) => moveNaoRandom({ x: e.clientX, y: e.clientY }));
-    nao.addEventListener('click', (e) => { e.preventDefault(); moveNaoRandom({ x: e.clientX, y: e.clientY }); });
-
-
-    window.addEventListener('load', alignNaoNextToSim);
-    window.addEventListener('resize', alignNaoNextToSim);
+    window.addEventListener('pointermove', (e) => maybeEvade(e.clientX, e.clientY));
+    nao.addEventListener('pointerenter', (e) => { playErrou(); moveNaoRandom({ x: e.clientX, y: e.clientY }); });
+    nao.addEventListener('click', (e) => { e.preventDefault(); playErrou(); moveNaoRandom({ x: e.clientX, y: e.clientY }); });
+    nao.addEventListener('pointerdown', (e) => { playErrou(); moveNaoRandom({ x: e.clientX, y: e.clientY }); });
   })();
   </script>
 </body>

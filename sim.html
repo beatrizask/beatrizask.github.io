@@ -10,30 +10,26 @@
   <meta name="color-scheme" content="light dark">
 </head>
 <body class="sim-page">
-
   <audio id="music" preload="auto" loop>
     <source src="./musica.mp3" type="audio/mpeg">
   </audio>
 
-  <h1>💘 Você disse SIM! 💘</h1>
-  <p>Agora estamos oficialmente namorando! 💞</p>
+  <main>
+    <h1>💘 Você disse SIM! 💘</h1>
+    <p>Agora estamos oficialmente namorando! 💞</p>
+  </main>
 
-  <button id="playMusic">▶️ Clica aqui 💖</button>
+  <button id="playMusic" aria-label="Tocar música romântica">▶️ Clica aqui 💖</button>
 
   <script>
-    // 💖 Corrige autoplay bloqueado pelo Chrome
     const music = document.getElementById('music');
     const playBtn = document.getElementById('playMusic');
     playBtn.addEventListener('click', () => {
-      music.play().then(() => {
-        playBtn.remove();
-      }).catch(err => {
-        alert("Clique novamente para liberar o som (bloqueado pelo Chrome)");
-        console.log(err);
-      });
+      music.play().then(() => playBtn.remove()).catch(() => alert("Clique novamente para liberar o som"));
     });
 
-    // 💞 Corações subindo
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     function createHeart() {
       const heart = document.createElement("div");
       heart.className = "heart";
@@ -44,19 +40,21 @@
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 6000);
     }
-    setInterval(createHeart, 200);
 
-    // 🎆 Fogos de artifício
     function createFirework() {
       const firework = document.createElement("div");
       firework.className = "firework";
       firework.style.left = Math.random() * 100 + "vw";
       firework.style.top = Math.random() * 80 + "vh";
-      firework.style.backgroundColor = ["#ff5c8a","#ffd6d6","#ff3c3c","#fff"][Math.floor(Math.random()*4)];
+      firework.style.color = ["#ff5c8a","#ffd6d6","#ff3c3c","#ffffff"][Math.floor(Math.random()*4)];
       document.body.appendChild(firework);
       setTimeout(() => firework.remove(), 1000);
     }
-    setInterval(createFirework, 700);
+
+    if (!reduceMotion) {
+      setInterval(createHeart, 200);
+      setInterval(createFirework, 700);
+    }
   </script>
 </body>
 </html>
