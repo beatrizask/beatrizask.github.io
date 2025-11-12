@@ -83,8 +83,8 @@ h1 {
   background-image:
     linear-gradient(rgba(255,80,80,.35), rgba(160,0,0,.55)),
     url('perfil.jpeg');
-  background-position: center center; /* centraliza o rosto */
-  background-size: cover;             /* preenche a tela */
+  background-position: center center;
+  background-size: cover;
   background-repeat: no-repeat;
   font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: #fff;
@@ -99,32 +99,39 @@ h1 {
   position: relative;
 }
 
+/* conteúdo da página SIM */
 .sim-page main {
-  display: grid;
-  gap: 8px;
-  padding: 16px 18px;
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 800px;
   background: rgba(0,0,0,0.25);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   border-radius: 14px;
   box-shadow: 0 6px 24px rgba(0,0,0,0.25);
-  max-width: 720px;
-  margin: 0 auto;
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
+  padding: 18px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
 }
 
 .sim-page h1 {
-  font-size: clamp(26px, 7vw, 44px);
+  font-size: clamp(28px, 6vw, 46px);
   margin: 0;
-  color: #fff;
+  line-height: 1.3;
 }
+
 .sim-page p {
-  font-size: clamp(16px, 4.6vw, 22px);
+  font-size: clamp(18px, 4.8vw, 26px);
   margin: 0;
-  color: #fff;
+  line-height: 1.4;
+  max-width: 95%;
+  word-break: keep-all;
 }
 
 /* corações */
@@ -162,10 +169,10 @@ h1 {
 audio { display: none; }
 #playMusic {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  right: 5%;
+  bottom: 5%;
   background: rgba(255,255,255,0.25);
-  color: #fff;
+  color: white;
   border: 1px solid rgba(255,255,255,0.6);
   padding: 10px 20px;
   border-radius: 50px;
@@ -178,4 +185,7 @@ audio { display: none; }
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   z-index: 10;
 }
-#playMusic:hover { background: rgba(255,255,255,0.45); transform: translateY(-3px) scale(1.03); }
+#playMusic:hover {
+  background: rgba(255,255,255,0.45);
+  transform: translateY(-3px) scale(1.03);
+}
